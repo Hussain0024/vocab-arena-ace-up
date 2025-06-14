@@ -1,6 +1,9 @@
 
 import { useState } from 'react';
-import { Book, Trophy, User, Star, Settings, Zap, Gift, BarChart3 } from 'lucide-react';
+import { Menu, X, User, LogOut, Trophy, Zap } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useUserStats } from '@/hooks/useUserStats';
+import { Link } from 'react-router-dom';
 
 interface NavigationProps {
   activeSection: string;
@@ -8,51 +11,155 @@ interface NavigationProps {
 }
 
 const Navigation = ({ activeSection, setActiveSection }: NavigationProps) => {
-  const navItems = [
-    { id: 'home', icon: Book, label: 'Learn' },
-    { id: 'flashcard', icon: Zap, label: 'Cards' },
-    { id: 'challenge', icon: Star, label: 'Daily' },
-    { id: 'leaderboard', icon: Trophy, label: 'Leaderboard' },
-    { id: 'stats', icon: BarChart3, label: 'Stats' },
-    { id: 'rewards', icon: Gift, label: 'Rewards' },
-    { id: 'subscription', icon: Trophy, label: 'Premium' },
-    { id: 'profile', icon: User, label: 'Profile' },
-  ];
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const { stats } = useUserStats();
+
+  const handleSignOut = async () => {
+    await signOut();
+    setIsMenuOpen(false);
+  };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20 px-4 py-3">
-      <div className="flex items-center justify-between max-w-md mx-auto">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 gradient-purple rounded-lg flex items-center justify-center">
-            <Book className="w-5 h-5 text-white" />
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-white/20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              VocabMaster
+            </h1>
           </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-game-purple to-game-blue bg-clip-text text-transparent">
-            VocabChamp
-          </span>
-        </div>
-        
-        <button className="p-2 hover:bg-white/10 rounded-lg transition-colors">
-          <Settings className="w-5 h-5 text-gray-600" />
-        </button>
-      </div>
-      
-      <div className="flex justify-center mt-4 bg-white/10 backdrop-blur-sm rounded-xl p-1 max-w-full mx-auto overflow-x-auto">
-        <div className="flex space-x-1 min-w-max">
-          {navItems.map((item) => (
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            {['home', 'flashcard', 'challenge', 'leaderboard', 'rewards'].map((item) => (
+              <button
+                key={item}
+                onClick={() => setActiveSection(item)}
+                className={`capitalize font-medium transition-colors ${
+                  activeSection === item
+                    ? 'text-purple-600'
+                    : 'text-gray-600 hover:text-purple-600'
+                }`}
+              >
+                {item === 'home' ? 'Home' : 
+                 item === 'flashcard' ? 'Study' :
+                 item === 'challenge' ? 'Challenge' :
+                 item === 'leaderboard' ? 'Leaderboard' :
+                 'Rewards'}
+              </button>
+            ))}
+          </div>
+
+          {/* User Section */}
+          <div className="flex items-center space-x-4">
+            {user ? (
+              <>
+                {/* User Stats */}
+                {stats && (
+                  <div className="hidden sm:flex items-center space-x-4 text-sm">
+                    <div className="flex items-center space-x-1 text-orange-600">
+                      <Zap className="w-4 h-4" />
+                      <span className="font-medium">{stats.total_xp}</span>
+                    </div>
+                    <div className="flex items-center space-x-1 text-purple-600">
+                      <Trophy className="w-4 h-4" />
+                      <span className="font-medium">Lv.{stats.level}</span>
+                    </div>
+                  </div>
+                )}
+                
+                {/* User Menu */}
+                <div className="relative">
+                  <button
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
+                  >
+                    <User className="w-4 h-4" />
+                    <span className="hidden sm:block">Profile</span>
+                  </button>
+                  
+                  {isMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2">
+                      <button
+                        onClick={() => {
+                          setActiveSection('profile');
+                          setIsMenuOpen(false);
+                        }}
+                        className="flex items-center space-x-2 w-full px-4 py-2 text-left hover:bg-gray-50"
+                      >
+                        <User className="w-4 h-4" />
+                        <span>Profile</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setActiveSection('stats');
+                          setIsMenuOpen(false);
+                        }}
+                        className="flex items-center space-x-2 w-full px-4 py-2 text-left hover:bg-gray-50"
+                      >
+                        <Trophy className="w-4 h-4" />
+                        <span>Statistics</span>
+                      </button>
+                      <hr className="my-2" />
+                      <button
+                        onClick={handleSignOut}
+                        className="flex items-center space-x-2 w-full px-4 py-2 text-left hover:bg-gray-50 text-red-600"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <Link
+                to="/auth"
+                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity"
+              >
+                Sign In
+              </Link>
+            )}
+
+            {/* Mobile menu button */}
             <button
-              key={item.id}
-              onClick={() => setActiveSection(item.id)}
-              className={`flex flex-col items-center py-2 px-3 rounded-lg transition-all duration-200 ${
-                activeSection === item.id
-                  ? 'bg-white/20 backdrop-blur-sm shadow-sm text-game-purple'
-                  : 'text-gray-600 hover:text-gray-800 hover:bg-white/10'
-              }`}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2"
             >
-              <item.icon className="w-4 h-4 mb-1" />
-              <span className="text-xs font-medium">{item.label}</span>
+              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
-          ))}
+          </div>
         </div>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t border-gray-200 py-4">
+            <div className="space-y-2">
+              {['home', 'flashcard', 'challenge', 'leaderboard', 'rewards'].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => {
+                    setActiveSection(item);
+                    setIsMenuOpen(false);
+                  }}
+                  className={`block w-full text-left px-4 py-2 capitalize font-medium transition-colors ${
+                    activeSection === item
+                      ? 'text-purple-600 bg-purple-50'
+                      : 'text-gray-600 hover:text-purple-600 hover:bg-gray-50'
+                  }`}
+                >
+                  {item === 'home' ? 'Home' : 
+                   item === 'flashcard' ? 'Study' :
+                   item === 'challenge' ? 'Challenge' :
+                   item === 'leaderboard' ? 'Leaderboard' :
+                   'Rewards'}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

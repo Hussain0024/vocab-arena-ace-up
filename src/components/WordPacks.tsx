@@ -1,57 +1,12 @@
 
 import { Lock, Star, BookOpen, Zap } from 'lucide-react';
+import { useWordPacks } from '@/hooks/useWordPacks';
+import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 const WordPacks = () => {
-  const wordPacks = [
-    {
-      id: 1,
-      title: "GRE Essentials",
-      description: "Master 500 high-frequency GRE words",
-      difficulty: "Advanced",
-      progress: 65,
-      totalWords: 500,
-      learnedWords: 325,
-      category: "Exam Prep",
-      isPremium: false,
-      color: "gradient-purple"
-    },
-    {
-      id: 2,
-      title: "Business English",
-      description: "Professional vocabulary for workplace",
-      difficulty: "Intermediate",
-      progress: 40,
-      totalWords: 300,
-      learnedWords: 120,
-      category: "Professional",
-      isPremium: false,
-      color: "gradient-blue"
-    },
-    {
-      id: 3,
-      title: "IELTS Academic",
-      description: "Academic words for IELTS success",
-      difficulty: "Advanced",
-      progress: 20,
-      totalWords: 400,
-      learnedWords: 80,
-      category: "Exam Prep",
-      isPremium: true,
-      color: "gradient-green"
-    },
-    {
-      id: 4,
-      title: "Daily Conversation",
-      description: "Common words for everyday use",
-      difficulty: "Beginner",
-      progress: 85,
-      totalWords: 200,
-      learnedWords: 170,
-      category: "General",
-      isPremium: false,
-      color: "gradient-orange"
-    }
-  ];
+  const { wordPacks, loading } = useWordPacks();
+  const { user } = useAuth();
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -61,6 +16,30 @@ const WordPacks = () => {
       default: return 'text-gray-600 bg-gray-100';
     }
   };
+
+  if (loading) {
+    return (
+      <section className="px-4 py-6">
+        <div className="max-w-md mx-auto">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Word Packs</h2>
+          <div className="space-y-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 animate-pulse">
+                <div className="flex items-start space-x-4">
+                  <div className="w-12 h-12 bg-gray-300 rounded-xl"></div>
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                    <div className="h-3 bg-gray-300 rounded w-full"></div>
+                    <div className="h-8 bg-gray-300 rounded w-full"></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="px-4 py-6">
@@ -93,7 +72,7 @@ const WordPacks = () => {
               key={pack.id}
               className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 card-hover relative overflow-hidden"
             >
-              {pack.isPremium && (
+              {pack.is_premium && !user && (
                 <div className="absolute top-3 right-3">
                   <div className="bg-gradient-to-r from-amber-400 to-orange-500 rounded-full p-1">
                     <Lock className="w-4 h-4 text-white" />
@@ -119,16 +98,18 @@ const WordPacks = () => {
                       {pack.difficulty}
                     </span>
                     <span className="text-xs text-gray-500">
-                      {pack.learnedWords}/{pack.totalWords} words
+                      {pack.learned_words || 0}/{pack.total_words} words
                     </span>
                   </div>
                   
-                  <div className="progress-bar mb-3">
-                    <div 
-                      className={`progress-fill ${pack.color.replace('gradient-', 'bg-game-')}`}
-                      style={{ width: `${pack.progress}%` }}
-                    ></div>
-                  </div>
+                  {user && (
+                    <div className="progress-bar mb-3">
+                      <div 
+                        className={`progress-fill ${pack.color.replace('gradient-', 'bg-game-')}`}
+                        style={{ width: `${pack.progress || 0}%` }}
+                      ></div>
+                    </div>
+                  )}
                   
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4 text-xs text-gray-500">
@@ -138,17 +119,26 @@ const WordPacks = () => {
                       </div>
                       <div className="flex items-center space-x-1">
                         <Zap className="w-3 h-3 text-orange-500" />
-                        <span>+{Math.floor(pack.totalWords * 0.1)} XP</span>
+                        <span>+{Math.floor(pack.total_words * 0.1)} XP</span>
                       </div>
                     </div>
                     
-                    <button className={`px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors ${
-                      pack.isPremium 
-                        ? 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700' 
-                        : `${pack.color} hover:opacity-90`
-                    }`}>
-                      {pack.isPremium ? 'Upgrade' : 'Continue'}
-                    </button>
+                    {user ? (
+                      <button className={`px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors ${
+                        pack.is_premium && !user
+                          ? 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700' 
+                          : `${pack.color} hover:opacity-90`
+                      }`}>
+                        {pack.is_premium && !user ? 'Upgrade' : 'Continue'}
+                      </button>
+                    ) : (
+                      <Link
+                        to="/auth"
+                        className="px-4 py-2 rounded-lg text-sm font-medium bg-gray-500 text-white hover:bg-gray-600 transition-colors"
+                      >
+                        Sign In
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

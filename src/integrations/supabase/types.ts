@@ -9,7 +9,304 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      achievements: {
+        Row: {
+          description: string
+          icon: string | null
+          id: string
+          name: string
+          requirement_type: string
+          requirement_value: number
+          reward_xp: number | null
+        }
+        Insert: {
+          description: string
+          icon?: string | null
+          id?: string
+          name: string
+          requirement_type: string
+          requirement_value: number
+          reward_xp?: number | null
+        }
+        Update: {
+          description?: string
+          icon?: string | null
+          id?: string
+          name?: string
+          requirement_type?: string
+          requirement_value?: number
+          reward_xp?: number | null
+        }
+        Relationships: []
+      }
+      daily_challenges: {
+        Row: {
+          challenge_data: Json | null
+          created_at: string | null
+          date: string | null
+          id: string
+          word_id: string | null
+        }
+        Insert: {
+          challenge_data?: Json | null
+          created_at?: string | null
+          date?: string | null
+          id?: string
+          word_id?: string | null
+        }
+        Update: {
+          challenge_data?: Json | null
+          created_at?: string | null
+          date?: string | null
+          id?: string
+          word_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_challenges_word_id_fkey"
+            columns: ["word_id"]
+            isOneToOne: false
+            referencedRelation: "words"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          updated_at: string | null
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          id: string
+          updated_at?: string | null
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
+      user_achievements: {
+        Row: {
+          achievement_id: string | null
+          earned_at: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          achievement_id?: string | null
+          earned_at?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          achievement_id?: string | null
+          earned_at?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_daily_progress: {
+        Row: {
+          challenge_id: string | null
+          completed: boolean | null
+          completed_at: string | null
+          id: string
+          score: number | null
+          user_id: string | null
+        }
+        Insert: {
+          challenge_id?: string | null
+          completed?: boolean | null
+          completed_at?: string | null
+          id?: string
+          score?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          challenge_id?: string | null
+          completed?: boolean | null
+          completed_at?: string | null
+          id?: string
+          score?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_daily_progress_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "daily_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_progress: {
+        Row: {
+          id: string
+          last_studied: string | null
+          learned_words: number | null
+          total_xp: number | null
+          user_id: string | null
+          word_pack_id: string | null
+        }
+        Insert: {
+          id?: string
+          last_studied?: string | null
+          learned_words?: number | null
+          total_xp?: number | null
+          user_id?: string | null
+          word_pack_id?: string | null
+        }
+        Update: {
+          id?: string
+          last_studied?: string | null
+          learned_words?: number | null
+          total_xp?: number | null
+          user_id?: string | null
+          word_pack_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_progress_word_pack_id_fkey"
+            columns: ["word_pack_id"]
+            isOneToOne: false
+            referencedRelation: "word_packs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_stats: {
+        Row: {
+          id: string
+          last_activity: string | null
+          level: number | null
+          streak_days: number | null
+          total_xp: number | null
+          user_id: string | null
+          words_learned: number | null
+        }
+        Insert: {
+          id?: string
+          last_activity?: string | null
+          level?: number | null
+          streak_days?: number | null
+          total_xp?: number | null
+          user_id?: string | null
+          words_learned?: number | null
+        }
+        Update: {
+          id?: string
+          last_activity?: string | null
+          level?: number | null
+          streak_days?: number | null
+          total_xp?: number | null
+          user_id?: string | null
+          words_learned?: number | null
+        }
+        Relationships: []
+      }
+      word_packs: {
+        Row: {
+          category: string
+          color: string | null
+          created_at: string | null
+          description: string | null
+          difficulty: string | null
+          id: string
+          is_premium: boolean | null
+          title: string
+          total_words: number | null
+        }
+        Insert: {
+          category: string
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          difficulty?: string | null
+          id?: string
+          is_premium?: boolean | null
+          title: string
+          total_words?: number | null
+        }
+        Update: {
+          category?: string
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          difficulty?: string | null
+          id?: string
+          is_premium?: boolean | null
+          title?: string
+          total_words?: number | null
+        }
+        Relationships: []
+      }
+      words: {
+        Row: {
+          created_at: string | null
+          definition: string
+          example: string | null
+          id: string
+          part_of_speech: string | null
+          pronunciation: string | null
+          synonyms: string[] | null
+          word: string
+          word_pack_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          definition: string
+          example?: string | null
+          id?: string
+          part_of_speech?: string | null
+          pronunciation?: string | null
+          synonyms?: string[] | null
+          word: string
+          word_pack_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          definition?: string
+          example?: string | null
+          id?: string
+          part_of_speech?: string | null
+          pronunciation?: string | null
+          synonyms?: string[] | null
+          word?: string
+          word_pack_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "words_word_pack_id_fkey"
+            columns: ["word_pack_id"]
+            isOneToOne: false
+            referencedRelation: "word_packs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

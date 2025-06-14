@@ -1,8 +1,14 @@
 
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { TrendingUp, Target, Clock, Zap } from 'lucide-react';
+import { useUserStats } from '@/hooks/useUserStats';
+import { useAuth } from '@/contexts/AuthContext';
 
 const GameStats = () => {
+  const { stats, loading } = useUserStats();
+  const { user } = useAuth();
+
+  // Mock data for charts (would be replaced with real data from API)
   const weeklyData = [
     { day: 'Mon', xp: 120, words: 8 },
     { day: 'Tue', xp: 150, words: 12 },
@@ -20,11 +26,41 @@ const GameStats = () => {
     { name: 'General', value: 20, color: '#F59E0B' }
   ];
 
+  if (loading) {
+    return (
+      <div className="px-4 py-6">
+        <div className="max-w-md mx-auto">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Learning Analytics</h2>
+          <div className="animate-pulse space-y-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl p-4 border border-gray-100">
+                <div className="h-20 bg-gray-300 rounded"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user || !stats) {
+    return (
+      <div className="px-4 py-6">
+        <div className="max-w-md mx-auto">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Learning Analytics</h2>
+          <div className="text-center text-gray-600">
+            Sign in to view your learning analytics
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const performanceStats = {
-    accuracy: 87,
+    accuracy: 87, // This would come from actual quiz/challenge data
     avgSessionTime: 12,
     wordsPerSession: 15,
-    bestStreak: 32
+    bestStreak: stats.streak_days
   };
 
   return (
@@ -37,37 +73,37 @@ const GameStats = () => {
           <div className="bg-white rounded-2xl p-4 border border-gray-100">
             <div className="flex items-center space-x-2 mb-2">
               <Target className="w-5 h-5 text-green-500" />
-              <span className="text-sm font-medium text-gray-700">Accuracy</span>
+              <span className="text-sm font-medium text-gray-700">Total XP</span>
             </div>
-            <p className="text-2xl font-bold text-gray-800">{performanceStats.accuracy}%</p>
-            <p className="text-xs text-green-600">+3% this week</p>
+            <p className="text-2xl font-bold text-gray-800">{stats.total_xp}</p>
+            <p className="text-xs text-green-600">Level {stats.level}</p>
           </div>
           
           <div className="bg-white rounded-2xl p-4 border border-gray-100">
             <div className="flex items-center space-x-2 mb-2">
               <Clock className="w-5 h-5 text-blue-500" />
-              <span className="text-sm font-medium text-gray-700">Avg Session</span>
+              <span className="text-sm font-medium text-gray-700">Words Learned</span>
             </div>
-            <p className="text-2xl font-bold text-gray-800">{performanceStats.avgSessionTime}m</p>
-            <p className="text-xs text-blue-600">Perfect pace!</p>
+            <p className="text-2xl font-bold text-gray-800">{stats.words_learned}</p>
+            <p className="text-xs text-blue-600">Keep going!</p>
           </div>
           
           <div className="bg-white rounded-2xl p-4 border border-gray-100">
             <div className="flex items-center space-x-2 mb-2">
               <Zap className="w-5 h-5 text-orange-500" />
-              <span className="text-sm font-medium text-gray-700">Words/Session</span>
+              <span className="text-sm font-medium text-gray-700">Avg Session</span>
             </div>
-            <p className="text-2xl font-bold text-gray-800">{performanceStats.wordsPerSession}</p>
-            <p className="text-xs text-orange-600">+2 from last week</p>
+            <p className="text-2xl font-bold text-gray-800">{performanceStats.avgSessionTime}m</p>
+            <p className="text-xs text-orange-600">Perfect pace!</p>
           </div>
           
           <div className="bg-white rounded-2xl p-4 border border-gray-100">
             <div className="flex items-center space-x-2 mb-2">
               <TrendingUp className="w-5 h-5 text-purple-500" />
-              <span className="text-sm font-medium text-gray-700">Best Streak</span>
+              <span className="text-sm font-medium text-gray-700">Streak Days</span>
             </div>
-            <p className="text-2xl font-bold text-gray-800">{performanceStats.bestStreak}</p>
-            <p className="text-xs text-purple-600">Personal record!</p>
+            <p className="text-2xl font-bold text-gray-800">{stats.streak_days}</p>
+            <p className="text-xs text-purple-600">Keep it up!</p>
           </div>
         </div>
         

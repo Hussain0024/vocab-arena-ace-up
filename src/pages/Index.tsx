@@ -10,6 +10,7 @@ import ProfileDashboard from '../components/ProfileDashboard';
 import GameStats from '../components/GameStats';
 import SubscriptionPage from '../components/SubscriptionPage';
 import RewardsSection from '../components/RewardsSection';
+import AuthGuard from '../components/AuthGuard';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -24,19 +25,43 @@ const Index = () => {
           </>
         );
       case 'flashcard':
-        return <FlashCard />;
+        return (
+          <AuthGuard>
+            <FlashCard />
+          </AuthGuard>
+        );
       case 'challenge':
-        return <DailyChallenge />;
+        return (
+          <AuthGuard>
+            <DailyChallenge />
+          </AuthGuard>
+        );
       case 'leaderboard':
         return <Leaderboard />;
       case 'profile':
-        return <ProfileDashboard />;
+        return (
+          <AuthGuard>
+            <ProfileDashboard />
+          </AuthGuard>
+        );
       case 'stats':
-        return <GameStats />;
+        return (
+          <AuthGuard>
+            <GameStats />
+          </AuthGuard>
+        );
       case 'subscription':
-        return <SubscriptionPage />;
+        return (
+          <AuthGuard>
+            <SubscriptionPage />
+          </AuthGuard>
+        );
       case 'rewards':
-        return <RewardsSection />;
+        return (
+          <AuthGuard>
+            <RewardsSection />
+          </AuthGuard>
+        );
       default:
         return (
           <>
