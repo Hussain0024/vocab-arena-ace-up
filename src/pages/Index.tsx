@@ -8,6 +8,8 @@ import DailyChallenge from '../components/DailyChallenge';
 import Leaderboard from '../components/Leaderboard';
 import ProfileDashboard from '../components/ProfileDashboard';
 import GameStats from '../components/GameStats';
+import SubscriptionPage from '../components/SubscriptionPage';
+import RewardsSection from '../components/RewardsSection';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -31,6 +33,10 @@ const Index = () => {
         return <ProfileDashboard />;
       case 'stats':
         return <GameStats />;
+      case 'subscription':
+        return <SubscriptionPage />;
+      case 'rewards':
+        return <RewardsSection />;
       default:
         return (
           <>
@@ -45,7 +51,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       <Navigation />
       
-      <main className="pb-20">
+      <main className="pb-20 pt-32">
         {renderSection()}
       </main>
       
@@ -59,8 +65,8 @@ const Index = () => {
         </button>
         
         <button
-          onClick={() => setActiveSection('stats')}
-          className="w-12 h-12 gradient-blue rounded-full shadow-lg flex items-center justify-center hover:shadow-xl transition-all card-hover"
+          onClick={() => setActiveSection('rewards')}
+          className="w-12 h-12 gradient-orange rounded-full shadow-lg flex items-center justify-center hover:shadow-xl transition-all card-hover"
         >
           <div className="w-4 h-4 bg-white rounded-sm"></div>
         </button>
@@ -68,12 +74,14 @@ const Index = () => {
       
       {/* Navigation Pills */}
       <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
-        <div className="bg-white/95 backdrop-blur-md rounded-full p-2 shadow-lg border border-gray-200">
+        <div className="bg-white/20 backdrop-blur-md rounded-full p-2 shadow-lg border border-white/30">
           <div className="flex space-x-2">
             {[
               { id: 'home', label: '🏠' },
+              { id: 'flashcard', label: '⚡' },
               { id: 'challenge', label: '⭐' },
-              { id: 'leaderboard', label: '🏆' },
+              { id: 'rewards', label: '🎁' },
+              { id: 'subscription', label: '👑' },
               { id: 'profile', label: '👤' }
             ].map((item) => (
               <button
@@ -82,7 +90,7 @@ const Index = () => {
                 className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
                   activeSection === item.id
                     ? 'bg-game-purple text-white shadow-md'
-                    : 'hover:bg-gray-100'
+                    : 'hover:bg-white/20'
                 }`}
               >
                 <span className="text-lg">{item.label}</span>
