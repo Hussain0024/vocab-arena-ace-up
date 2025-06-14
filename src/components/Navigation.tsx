@@ -1,14 +1,19 @@
 
 import { useState } from 'react';
-import { Book, Trophy, User, Star, Settings, Zap, Gift } from 'lucide-react';
+import { Book, Trophy, User, Star, Settings, Zap, Gift, BarChart3 } from 'lucide-react';
 
-const Navigation = () => {
-  const [activeTab, setActiveTab] = useState('home');
+interface NavigationProps {
+  activeSection: string;
+  setActiveSection: (section: string) => void;
+}
 
+const Navigation = ({ activeSection, setActiveSection }: NavigationProps) => {
   const navItems = [
     { id: 'home', icon: Book, label: 'Learn' },
     { id: 'flashcard', icon: Zap, label: 'Cards' },
     { id: 'challenge', icon: Star, label: 'Daily' },
+    { id: 'leaderboard', icon: Trophy, label: 'Leaderboard' },
+    { id: 'stats', icon: BarChart3, label: 'Stats' },
     { id: 'rewards', icon: Gift, label: 'Rewards' },
     { id: 'subscription', icon: Trophy, label: 'Premium' },
     { id: 'profile', icon: User, label: 'Profile' },
@@ -36,9 +41,9 @@ const Navigation = () => {
           {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => setActiveSection(item.id)}
               className={`flex flex-col items-center py-2 px-3 rounded-lg transition-all duration-200 ${
-                activeTab === item.id
+                activeSection === item.id
                   ? 'bg-white/20 backdrop-blur-sm shadow-sm text-game-purple'
                   : 'text-gray-600 hover:text-gray-800 hover:bg-white/10'
               }`}
