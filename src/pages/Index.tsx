@@ -55,27 +55,6 @@ const Index = () => {
         {renderSection()}
       </main>
       
-      {/* Quick Action Buttons - These are for quick access to key features */}
-      <div className="fixed bottom-6 right-6 space-y-3">
-        {/* Purple Button - Quick access to flashcards for immediate learning */}
-        <button
-          onClick={() => setActiveSection('flashcard')}
-          className="w-14 h-14 gradient-purple rounded-full shadow-lg flex items-center justify-center hover:shadow-xl transition-all card-hover"
-          title="Quick Flashcards"
-        >
-          <div className="w-6 h-6 bg-white rounded-sm"></div>
-        </button>
-        
-        {/* Yellow/Orange Button - Quick access to daily rewards */}
-        <button
-          onClick={() => setActiveSection('rewards')}
-          className="w-12 h-12 gradient-orange rounded-full shadow-lg flex items-center justify-center hover:shadow-xl transition-all card-hover"
-          title="Daily Rewards"
-        >
-          <div className="w-4 h-4 bg-white rounded-sm"></div>
-        </button>
-      </div>
-      
       {/* Navigation Pills - Alternative navigation at bottom for mobile users */}
       <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
         <div className="bg-white/20 backdrop-blur-md rounded-full p-2 shadow-lg border border-white/30">
