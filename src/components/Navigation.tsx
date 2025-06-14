@@ -12,12 +12,19 @@ interface NavigationProps {
 
 const Navigation = ({ activeSection, setActiveSection }: NavigationProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { stats } = useUserStats();
 
   const handleSignOut = async () => {
     await signOut();
+    setIsUserMenuOpen(false);
+  };
+
+  const handleNavClick = (section: string) => {
+    setActiveSection(section);
     setIsMenuOpen(false);
+    setIsUserMenuOpen(false);
   };
 
   return (
@@ -36,7 +43,7 @@ const Navigation = ({ activeSection, setActiveSection }: NavigationProps) => {
             {['home', 'flashcard', 'challenge', 'leaderboard', 'rewards'].map((item) => (
               <button
                 key={item}
-                onClick={() => setActiveSection(item)}
+                onClick={() => handleNavClick(item)}
                 className={`capitalize font-medium transition-colors ${
                   activeSection === item
                     ? 'text-purple-600'
@@ -73,30 +80,24 @@ const Navigation = ({ activeSection, setActiveSection }: NavigationProps) => {
                 {/* User Menu */}
                 <div className="relative">
                   <button
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                     className="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full hover:opacity-90 transition-opacity"
                   >
                     <User className="w-4 h-4" />
                     <span className="hidden sm:block">Profile</span>
                   </button>
                   
-                  {isMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2">
+                  {isUserMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
                       <button
-                        onClick={() => {
-                          setActiveSection('profile');
-                          setIsMenuOpen(false);
-                        }}
+                        onClick={() => handleNavClick('profile')}
                         className="flex items-center space-x-2 w-full px-4 py-2 text-left hover:bg-gray-50"
                       >
                         <User className="w-4 h-4" />
                         <span>Profile</span>
                       </button>
                       <button
-                        onClick={() => {
-                          setActiveSection('stats');
-                          setIsMenuOpen(false);
-                        }}
+                        onClick={() => handleNavClick('stats')}
                         className="flex items-center space-x-2 w-full px-4 py-2 text-left hover:bg-gray-50"
                       >
                         <Trophy className="w-4 h-4" />
@@ -140,10 +141,7 @@ const Navigation = ({ activeSection, setActiveSection }: NavigationProps) => {
               {['home', 'flashcard', 'challenge', 'leaderboard', 'rewards'].map((item) => (
                 <button
                   key={item}
-                  onClick={() => {
-                    setActiveSection(item);
-                    setIsMenuOpen(false);
-                  }}
+                  onClick={() => handleNavClick(item)}
                   className={`block w-full text-left px-4 py-2 capitalize font-medium transition-colors ${
                     activeSection === item
                       ? 'text-purple-600 bg-purple-50'

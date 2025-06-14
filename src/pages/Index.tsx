@@ -76,7 +76,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
       
-      <main className="pb-20 pt-32">
+      <main className="pt-16">
         {renderSection()}
       </main>
       

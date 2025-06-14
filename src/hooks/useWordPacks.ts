@@ -30,7 +30,8 @@ export const useWordPacks = () => {
       // Fetch word packs
       const { data: packs, error: packsError } = await supabase
         .from('word_packs')
-        .select('*');
+        .select('*')
+        .order('created_at', { ascending: false });
 
       if (packsError) throw packsError;
 
@@ -50,7 +51,7 @@ export const useWordPacks = () => {
           return {
             ...pack,
             learned_words: learnedWords,
-            progress: Math.round((learnedWords / pack.total_words) * 100)
+            progress: pack.total_words > 0 ? Math.round((learnedWords / pack.total_words) * 100) : 0
           };
         });
 
@@ -66,6 +67,8 @@ export const useWordPacks = () => {
       }
     } catch (error) {
       console.error('Error fetching word packs:', error);
+      // Fallback to empty array if there's an error
+      setWordPacks([]);
     } finally {
       setLoading(false);
     }
