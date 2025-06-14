@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,17 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				game: {
+					purple: '#8B5CF6',
+					'purple-light': '#A78BFA',
+					'purple-dark': '#7C3AED',
+					orange: '#F59E0B',
+					'orange-light': '#FCD34D',
+					green: '#10B981',
+					'green-light': '#34D399',
+					blue: '#3B82F6',
+					'blue-light': '#60A5FA'
 				}
 			},
 			borderRadius: {
@@ -84,11 +96,38 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'flip-card': {
+					'0%': { transform: 'rotateY(0deg)' },
+					'100%': { transform: 'rotateY(180deg)' }
+				},
+				'bounce-in': {
+					'0%': { transform: 'scale(0.3)', opacity: '0' },
+					'50%': { transform: 'scale(1.05)', opacity: '1' },
+					'70%': { transform: 'scale(0.9)' },
+					'100%': { transform: 'scale(1)' }
+				},
+				'slide-up': {
+					'0%': { transform: 'translateY(100%)', opacity: '0' },
+					'100%': { transform: 'translateY(0)', opacity: '1' }
+				},
+				'float-up': {
+					'0%': { transform: 'translateY(0px) scale(1)', opacity: '1' },
+					'100%': { transform: 'translateY(-30px) scale(1.2)', opacity: '0' }
+				},
+				'progress-fill': {
+					'0%': { width: '0%' },
+					'100%': { width: 'var(--progress-width)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'flip-card': 'flip-card 0.4s ease-in-out',
+				'bounce-in': 'bounce-in 0.6s ease-out',
+				'slide-up': 'slide-up 0.3s ease-out',
+				'float-up': 'float-up 0.5s ease-out',
+				'progress-fill': 'progress-fill 1s ease-out'
 			}
 		}
 	},
